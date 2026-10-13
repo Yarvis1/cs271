@@ -11,5 +11,11 @@ CHIP Or {
     OUT out;
 
     PARTS:
+    Not(in=a , out=x );
+    Not(in=b , out=y );
+    And(a=x , b=y , out=notxandy );
+    Not(in=notxandy , out=out );
+   
+
     //// Replace this comment with your code.
 }
