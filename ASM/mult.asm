@@ -1,0 +1,14 @@
+@1
+D=M
+@I
+M=D
+(LOOP)
+@0
+D=M
+@2
+M=D+M
+@I
+M=M-1
+D=M
+@LOOP
+D;JGT
