@@ -32,5 +32,26 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-	//// Replace this comment with your code.
-}
+    Not(in=instruction[15] , out=N15 );
+    Or(a=N15 , b=instruction[5] , out=N15o5 );
+    And(a=instruction[15] , b=instruction[4] , out=A154 );
+    Mux16(a=instruction , b=Aluout , sel=instruction[15] , out=Imuxout );
+    ARegister(in=Imuxout , load=N15o5 , out = Aregout ,out[0..14] = addressM);
+    Mux16(a=Aregout , b=inM , sel= instruction[12], out=INmuxout );
+    ALU(x=Dregout , y=INmuxout , zx=instruction[11] , nx=instruction[10] , zy=instruction[9] , ny=instruction[8] , f=instruction[7], no=instruction[6] , out=outM ,out=Aluout , zr=Zero , ng=Negate );
+    DRegister(in=Aluout , load=A154 , out=Dregout );
+    And(a=instruction[15],b=instruction[3],out=writeM);
+    Not(in=Zero , out=NZero );
+    Not(in=Negate, out=NNegate);
+    And(a=NZero , b=NNegate , out=positive );
+    And(a=instruction[2] , b=Negate , out=inN );
+    And(a=instruction[1] , b=Zero , out=inZ );
+    And(a=instruction[0] , b=positive , out=inP );
+    Or(a=inN , b=inZ , out=NOZ );
+    Or(a=NOZ , b=inP , out=NOZOP );
+    And(a=NOZOP , b=instruction[15] , out=NOZOPA15 );
+    PC(in=Aregout , load=NOZOPA15 , inc=true , reset=reset , out[0..14]=pc );
+    }
+
+
+	//// Replace this comment with your code
